@@ -1,7 +1,7 @@
 WP STAGING Tweaks
 ========================
 
-This WordPress Plugin extends WP STAGING with extra functions by using WordPress hooks and filters.
+This WordPress Plugin extends WP STAGING with extra functions by using internal WP STAGING hooks and filters.
 
 Installation
 ------------
