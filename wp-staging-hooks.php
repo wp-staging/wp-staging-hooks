@@ -31,7 +31,7 @@ class wpstagingHooks {
         //add_action( 'wpstg_cloning_complete', array($this, 'cloningComplete'), 10 );
 
         // Run after successfull pushing
-        add_action( 'wpstg_pushing_complete', array($this, 'pushingComplete') );
+        //add_action( 'wpstg_pushing_complete', array($this, 'pushingComplete') );
 
         // Exclude Tables From Search & Replace operation / Cloning and Pushing
         //add_action( 'wpstg_searchreplace_excl_tables', array($this, 'excludeTablesSR'), 10 );
