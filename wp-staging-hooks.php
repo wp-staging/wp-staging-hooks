@@ -80,7 +80,16 @@ class wpstagingHooks {
     }
 
     /**
-     * Exclude Tables From Search & Replace operation
+     * Exclude certain Tables From Search & Replace operation
+     * 
+     * Use this if the search & replace process eats up a lot of your available memory 
+     * and the cloning or pushing process failed with a ‘memory exhausted error‘.  
+     * You can also use this to improve the speed of the cloning and pushing process.
+     * 
+     * Exclude tables which do not need any search & replacement of strings! 
+     * These can be tables which contains visitor stats, IP addresses or similar. 
+     * After excluding these tables you can increase the DB Search & Replace limit in 
+     * WP Staging settings to a higher value to get better performance.
      */
     public function excludeTablesSR( $tables ) {
         $addTables = array('_posts', '_postmeta');
@@ -88,7 +97,7 @@ class wpstagingHooks {
     }
 
     /**
-     * Exclude Tables From Search & Replace operation
+     * Exclude certain rows in table wp_options from Search & Replace operation
      */
     public function excludeRowsSR( $default ) {
         $rows = array('siteurl', 'home');
@@ -96,7 +105,7 @@ class wpstagingHooks {
     }
 
     /**
-     * Exclude Tables From Search & Replace operation
+     * Exclude certain strings srom Search & Replace operations
      */
     public function excludeStringsSR() {
         return array('blog.localhost.com', 'blog1.localhost.com');
@@ -184,6 +193,8 @@ class wpstagingHooks {
 
     /**
      * Pushing: Preserve data in wp_options and exclude it from pushing
+     * The example below preserves the value of the ‘siteurl’ on the live site.
+     * Any number of additional options may be added.
      */
     function wpstg_push_options_excl( $options ) {
         $options[] = 'siteurl';
@@ -192,6 +203,7 @@ class wpstagingHooks {
 
 }
 
-    new wpstagingHooks();
+// Launch it
+new wpstagingHooks();
 
 
