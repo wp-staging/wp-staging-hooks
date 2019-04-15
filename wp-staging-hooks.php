@@ -26,6 +26,8 @@ class wpstagingHooks {
      */
     function __construct() {
 
+        // Keep certain plugins activated while wp staging requests are executed. Necessary if you want to use third party plugin function while using one of wp staging hooks or filters
+        //update_option('wpstg_optimizer_excluded', array('wp-mail-smtp'));
 
         // Run after successfull cloning
         //add_action( 'wpstg_cloning_complete', array($this, 'cloningComplete'), 10 );
