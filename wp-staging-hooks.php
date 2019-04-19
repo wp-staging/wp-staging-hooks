@@ -62,10 +62,13 @@ class wpstagingHooks {
         // Pushing: Exclude folders from pushing
         //add_action( 'wpstg_push_excl_folders_custom', array($this, 'wpstg_push_directories_excl'), 10 );
 
+        // Pushing: Exclude files from pushing
+        //add_action( 'wpstg_push_excluded_files', array($this, 'wpstg_push_excluded_files'), 10 );
+
         // Pushing: Preserve data in wp_options and exclude it from pushing
         //add_action( 'wpstg_preserved_options', array($this, 'wpstg_push_options_excl'), 10 );
     }
-
+   
 
     /**
      * Send out an email when the cloning proces has been finished successfully
@@ -191,6 +194,14 @@ class wpstagingHooks {
     function wpstg_push_directories_excl( $default ) {
         $dirs = array('custom-folder', 'custom-folder2');
         return array_merge( $default, $dirs );
+    }
+    
+    /**
+     * Pushing: Exclude files from pushing
+     */
+    function wpstg_push_excluded_files( $default ) {
+        $files = array('custom-file', 'custom-file2');
+        return array_merge( $default, $files );
     }
 
     /**
