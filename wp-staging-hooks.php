@@ -26,62 +26,56 @@ class wpstagingHooks {
      */
     function __construct() {
 
+        // Set custom folder permissions and change the folder permission octal value
+        //add_filter('wpstg_folder_permission', array($this, 'setFolderPermissions'));
+
         // Keep certain plugins activated while wp staging requests are executed. Necessary if you want to use third party plugin function while using one of wp staging hooks or filters
         //update_option('wpstg_optimizer_excluded', array('wp-mail-smtp'));
-
         // Run after successfull cloning
         //add_action( 'wpstg_cloning_complete', array($this, 'cloningComplete'), 10 );
-
         // Run after successfull pushing
         //add_action( 'wpstg_pushing_complete', array($this, 'pushingComplete') );
-
         // Exclude Tables From Search & Replace operation / Cloning and Pushing
         //add_action( 'wpstg_searchreplace_excl_tables', array($this, 'excludeTablesSR'), 10 );
-
         // Cloning: Exclude Rows From Search & Replace in wp_options
         //add_action( 'wpstg_clone_searchreplace_excl_rows', array($this, 'excludeRowsSR'), 10 );
-
         // Cloning: Exclude Rows From Search & Replace in wp_options
         //add_action( 'wpstg_clone_searchreplace_excl', array($this, 'excludeStringsSR'), 10 );
-
         // Cloning: Change Search & Replace Parameters
         //add_action( 'wpstg_clone_searchreplace_params', array($this, 'setSRparams'), 10 );
-
         // Cloning: Exclude Folders
         //add_action( 'wpstg_clone_excl_folders', array($this, 'excludeFolders'), 10 );
-
         // Cloning: Do not Modify Table Prefix from option_name in wp_options
         //add_action( 'wpstg_excl_option_name_custom', array($this, 'wpstg_excl_option_name_custom'), 10 );
-
         // Pushing: Change Search & Replace parameters
         //add_action( 'wpstg_push_searchreplace_params', array($this, 'wpstg_push_custom_params'), 10 );
-
         // Pushing: Exclude tables from pushing
         //add_action( 'wpstg_push_excluded_tables', array($this, 'wpstg_push_excluded_tables'), 10 );
-
         // Pushing: Exclude folders from pushing
         //add_action( 'wpstg_push_excl_folders_custom', array($this, 'wpstg_push_directories_excl'), 10 );
-
         // Pushing: Exclude files from pushing
         //add_action( 'wpstg_push_excluded_files', array($this, 'wpstg_push_excluded_files'), 10 );
-
         // Pushing: Preserve data in wp_options and exclude it from pushing
         //add_action( 'wpstg_preserved_options', array($this, 'wpstg_push_options_excl'), 10 );
     }
-   
+
+    public function setFolderPermissions($octal) {
+        $octal = 0755;
+        return $octal;
+    }
 
     /**
      * Send out an email when the cloning proces has been finished successfully
      */
     public function cloningComplete() {
-        wp_mail( 'test@example.com', 'WP Staging cloning process has been finished', 'body sample text' );
+        wp_mail('test@example.com', 'WP Staging cloning process has been finished', 'body sample text');
     }
 
     /**
      * Send out an email when the pushing proces has been finished successfully
      */
     public function pushingComplete() {
-            wp_mail( 'test@example.com', 'WP Staging cloning process has been finished', 'body sample text' );
+        wp_mail('test@example.com', 'WP Staging cloning process has been finished', 'body sample text');
     }
 
     /**
@@ -96,17 +90,17 @@ class wpstagingHooks {
      * After excluding these tables you can increase the DB Search & Replace limit in 
      * WP Staging settings to a higher value to get better performance.
      */
-    public function excludeTablesSR( $tables ) {
+    public function excludeTablesSR($tables) {
         $addTables = array('_posts', '_postmeta');
-        return array_merge( $tables, $addTables );
+        return array_merge($tables, $addTables);
     }
 
     /**
      * Exclude certain rows in table wp_options from Search & Replace operation
      */
-    public function excludeRowsSR( $default ) {
+    public function excludeRowsSR($default) {
         $rows = array('siteurl', 'home');
-        return array_merge( $default, $rows );
+        return array_merge($default, $rows);
     }
 
     /**
@@ -119,89 +113,89 @@ class wpstagingHooks {
     /**
      * Cloning: Change Search & Replace Parameters
      */
-    public function setSRparams( $args ) {
+    public function setSRparams($args) {
         // Default values - Can be changed
-        $args['search_for']       = array_merge(
+        $args['search_for'] = array_merge(
                 $args['search_for'], array('SEARCHSTRING', 'SEARCHSTRING2')
         );
-        $args['replace_with']     = array_merge(
+        $args['replace_with'] = array_merge(
                 $args['replace_with'], array('REPLACESTRING', 'REPLACESTRING2')
         );
-        $args['replace_guids']    = 'off';
-        $args['dry_run']          = 'off';
+        $args['replace_guids'] = 'off';
+        $args['dry_run'] = 'off';
         $args['case_insensitive'] = false;
-        $args['replace_guids']    = 'off';
-        $args['replace_mails']    = 'off';
-        $args['skip_transients']  = 'on';
+        $args['replace_guids'] = 'off';
+        $args['replace_mails'] = 'off';
+        $args['skip_transients'] = 'on';
         return $args;
     }
 
     /**
      * Cloning: Exclude Folders
      */
-    public function excludeFolders( $defaultFolders ) {
+    public function excludeFolders($defaultFolders) {
         $folders = array('wordpress-seo', 'custom-folder');
-        return array_merge( $defaultFolders, $folders );
+        return array_merge($defaultFolders, $folders);
     }
 
     /**
      * Excluded folders relative to the wp-content folder when cloning multisites
      */
-    public function multisiteExcludeFoldersCloning( $defaultFolders ) {
+    public function multisiteExcludeFoldersCloning($defaultFolders) {
         $folders = array('plugins/wordpress-seo', 'themes/custom-folder');
-        return array_merge( $defaultFolders, $folders );
+        return array_merge($defaultFolders, $folders);
     }
 
     /**
      * Cloning: Do not Modify Table Prefix for particular rows in option_name
      */
-    public function wpstg_excl_option_name_custom( $args ) {
+    public function wpstg_excl_option_name_custom($args) {
         $cols = array('wp_mail_smtp', 'wp_mail_smtp_version');
-        return array_merge( $args, $cols );
+        return array_merge($args, $cols);
     }
 
     /**
      * Pushing: Change Search & Replace parameters
      */
-    public function wpstg_push_custom_params( $args ) {
+    public function wpstg_push_custom_params($args) {
         // Default values - Can be changed
-        $args['search_for']       = array_merge(
+        $args['search_for'] = array_merge(
                 $args['search_for'], array('SEARCHSTRING', 'SEARCHSTRING2')
         );
-        $args['replace_with']     = array_merge(
+        $args['replace_with'] = array_merge(
                 $args['replace_with'], array('REPLACESTRING', 'REPLACESTRING2')
         );
-        $args['replace_guids']    = 'off';
-        $args['dry_run']          = 'off';
+        $args['replace_guids'] = 'off';
+        $args['dry_run'] = 'off';
         $args['case_insensitive'] = false;
-        $args['replace_guids']    = 'off';
-        $args['replace_mails']    = 'off';
-        $args['skip_transients']  = 'on';
+        $args['replace_guids'] = 'off';
+        $args['replace_mails'] = 'off';
+        $args['skip_transients'] = 'on';
         return $args;
     }
 
     /**
      * Pushing: Change Search & Replace parameters
      */
-    function wpstg_push_excluded_tables( $tables ) {
+    function wpstg_push_excluded_tables($tables) {
         $customTables = array('_options', '_posts');
-        return array_merge( $tables, $customTables );
+        return array_merge($tables, $customTables);
     }
 
     /**
      * Pushing: Exclude folders from pushing
      */
-    function wpstg_push_directories_excl( $default ) {
+    function wpstg_push_directories_excl($default) {
         $dirs = array('custom-folder', 'custom-folder2');
-        return array_merge( $default, $dirs );
+        return array_merge($default, $dirs);
     }
-    
+
     /**
      * Pushing: Exclude files from pushing
      */
-    function wpstg_push_excluded_files( $default ) {
+    function wpstg_push_excluded_files($default) {
         $files = array('custom-file', 'custom-file2');
-        return array_merge( $default, $files );
+        return array_merge($default, $files);
     }
 
     /**
@@ -209,7 +203,7 @@ class wpstagingHooks {
      * The example below preserves the value of the ‘siteurl’ on the live site.
      * Any number of additional options may be added.
      */
-    function wpstg_push_options_excl( $options ) {
+    function wpstg_push_options_excl($options) {
         $options[] = 'siteurl';
         return $options;
     }
