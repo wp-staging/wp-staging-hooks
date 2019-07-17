@@ -45,7 +45,7 @@ class wpstagingHooks {
         // Cloning: Do not Modify Table Prefix from option_name in wp_options
         //add_action( 'wpstg_excl_option_name_custom', array($this, 'wpstg_excl_option_name_custom'), 10 );
         // Cloning: Change target destination dir
-        add_filter( "wpstg_cloning_destination_dir", array($this, 'change_cloning_dest_dir'), 10 );
+        // add_filter( "wpstg_cloning_destination_dir", array($this, 'change_cloning_dest_dir'), 10 );
         // Pushing: Change Search & Replace parameters
         //add_action( 'wpstg_push_searchreplace_params', array($this, 'wpstg_push_custom_params'), 10 );
         // Pushing: Exclude tables from pushing
