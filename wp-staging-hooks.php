@@ -28,47 +28,41 @@ class wpstagingHooks {
 
         // Keep certain plugins activated while wp staging requests are executed. Necessary if you want to use third party plugin function while using one of wp staging hooks or filters
         //update_option('wpstg_optimizer_excluded', array('wp-mail-smtp'));
-
         // Run after successfull cloning
         //add_action( 'wpstg_cloning_complete', array($this, 'cloningComplete'), 10 );
-
         // Run after successfull pushing
         //add_action( 'wpstg_pushing_complete', array($this, 'pushingComplete') );
-
         // Exclude Tables From Search & Replace operation / Cloning and Pushing
         //add_action( 'wpstg_searchreplace_excl_tables', array($this, 'excludeTablesSR'), 10 );
-
         // Cloning: Exclude Rows From Search & Replace in wp_options
         //add_action( 'wpstg_clone_searchreplace_excl_rows', array($this, 'excludeRowsSR'), 10 );
-
         // Cloning: Exclude Rows From Search & Replace in wp_options
         //add_action( 'wpstg_clone_searchreplace_excl', array($this, 'excludeStringsSR'), 10 );
-
         // Cloning: Change Search & Replace Parameters
         //add_action( 'wpstg_clone_searchreplace_params', array($this, 'setSRparams'), 10 );
-
         // Cloning: Exclude Folders
         //add_action( 'wpstg_clone_excl_folders', array($this, 'excludeFolders'), 10 );
-
         // Cloning: Do not Modify Table Prefix from option_name in wp_options
         //add_action( 'wpstg_excl_option_name_custom', array($this, 'wpstg_excl_option_name_custom'), 10 );
-
+        // Cloning: Change target destination dir
+        add_filter( "wpstg_cloning_destination_dir", array($this, 'change_cloning_dest_dir'), 10 );
         // Pushing: Change Search & Replace parameters
         //add_action( 'wpstg_push_searchreplace_params', array($this, 'wpstg_push_custom_params'), 10 );
-
         // Pushing: Exclude tables from pushing
         //add_action( 'wpstg_push_excluded_tables', array($this, 'wpstg_push_excluded_tables'), 10 );
-
         // Pushing: Exclude folders from pushing
         //add_action( 'wpstg_push_excl_folders_custom', array($this, 'wpstg_push_directories_excl'), 10 );
-
         // Pushing: Exclude files from pushing
         //add_action( 'wpstg_push_excluded_files', array($this, 'wpstg_push_excluded_files'), 10 );
-
         // Pushing: Preserve data in wp_options and exclude it from pushing
         //add_action( 'wpstg_preserved_options', array($this, 'wpstg_push_options_excl'), 10 );
+
     }
-   
+
+    public function change_cloning_dest_dir( $dest ) {
+        $dest = "/custompath/";
+        return $dest;
+    }
 
     /**
      * Send out an email when the cloning proces has been finished successfully
@@ -81,7 +75,7 @@ class wpstagingHooks {
      * Send out an email when the pushing proces has been finished successfully
      */
     public function pushingComplete() {
-            wp_mail( 'test@example.com', 'WP Staging cloning process has been finished', 'body sample text' );
+        wp_mail( 'test@example.com', 'WP Staging cloning process has been finished', 'body sample text' );
     }
 
     /**
@@ -195,7 +189,7 @@ class wpstagingHooks {
         $dirs = array('custom-folder', 'custom-folder2');
         return array_merge( $default, $dirs );
     }
-    
+
     /**
      * Pushing: Exclude files from pushing
      */
