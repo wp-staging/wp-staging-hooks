@@ -44,8 +44,10 @@ class wpstagingHooks {
         //add_action( 'wpstg_clone_excl_folders', array($this, 'excludeFolders'), 10 );
         // Cloning: Do not Modify Table Prefix from option_name in wp_options
         //add_action( 'wpstg_excl_option_name_custom', array($this, 'wpstg_excl_option_name_custom'), 10 );
+        // Cloning: Change target hostname
+        // add_filter( "wpstg_cloning_target_hostname", array($this, 'set_cloning_target_hostname'), 10 );
         // Cloning: Change target destination dir
-        // add_filter( "wpstg_cloning_destination_dir", array($this, 'change_cloning_dest_dir'), 10 );
+        // add_filter( "wpstg_cloning_target_dir", array($this, 'set_cloning_target_directory'), 10 );
         // Pushing: Change Search & Replace parameters
         //add_action( 'wpstg_push_searchreplace_params', array($this, 'wpstg_push_custom_params'), 10 );
         // Pushing: Exclude tables from pushing
@@ -56,10 +58,23 @@ class wpstagingHooks {
         //add_action( 'wpstg_push_excluded_files', array($this, 'wpstg_push_excluded_files'), 10 );
         // Pushing: Preserve data in wp_options and exclude it from pushing
         //add_action( 'wpstg_preserved_options', array($this, 'wpstg_push_options_excl'), 10 );
-
     }
 
-    public function change_cloning_dest_dir( $dest ) {
+    /**
+     * Change target hostname of staging site
+     * @param string $dest
+     * @return string
+     */
+    public function set_cloning_target_hostname( $dest ) {
+        $dest = "https://example.com";
+        return $dest;
+    }
+    /**
+     * Change target directory of staging site
+     * @param string $dest
+     * @return string
+     */
+    public function set_cloning_target_directory( $dest ) {
         $dest = "/custompath/";
         return $dest;
     }
@@ -70,6 +85,14 @@ class wpstagingHooks {
     public function cloningComplete() {
         wp_mail( 'test@example.com', 'WP Staging cloning process has been finished', 'body sample text' );
     }
+
+    /**
+     * Execute custom sql query after cloning
+     */
+//    public function cloningComplete( $args ) {
+//        global $wpdb;
+//        $wpdb->query( "SELECT * FROM TABLE" );
+//    }
 
     /**
      * Send out an email when the pushing proces has been finished successfully
