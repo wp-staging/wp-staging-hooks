@@ -29,7 +29,8 @@ class wpstagingHooks {
         // Keep certain plugins activated while wp staging requests are executed. Necessary if you want to use third party plugin function while using one of wp staging hooks or filters
         //update_option('wpstg_optimizer_excluded', array('wp-mail-smtp'));
         // Run after successfull cloning
-        //add_action( 'wpstg_cloning_complete', array($this, 'cloningComplete'), 10 );
+        //add_action( 'wpstg_cloning_complete', array($this, 'sendMail'), 10 );
+        //add_action( 'wpstg_cloning_complete', array($this, 'executeSql'), 10 );
         // Run after successfull pushing
         //add_action( 'wpstg_pushing_complete', array($this, 'pushingComplete') );
         // Exclude Tables From Search & Replace operation / Cloning and Pushing
@@ -69,6 +70,7 @@ class wpstagingHooks {
         $dest = "https://example.com";
         return $dest;
     }
+
     /**
      * Change target directory of staging site
      * @param string $dest
@@ -82,17 +84,36 @@ class wpstagingHooks {
     /**
      * Send out an email when the cloning proces has been finished successfully
      */
-    public function cloningComplete() {
+    public function sendMail() {
         wp_mail( 'test@example.com', 'WP Staging cloning process has been finished', 'body sample text' );
     }
 
     /**
-     * Execute custom sql query after cloning
+     * Execute custom sql query after cloning on staging site
      */
-//    public function cloningComplete( $args ) {
-//        global $wpdb;
-//        $wpdb->query( "SELECT * FROM TABLE" );
-//    }
+    public function executeSql( $args ) {
+        global $wpdb;
+
+        // External database object if staging site is located in separate database
+        if( !empty( $args->databaseUser ) && !empty( $args->databasePassword ) && !empty( $args->databaseDatabase ) && !empty( $args->databaseServer ) ) {
+            $extDb = new \wpdb( $args->databaseUser, str_replace( "\\\\", "\\", $args->databasePassword ), $args->databaseDatabase, $args->databaseServer );
+        }
+
+        // Uncomment the database you want to execute sql query on
+        $db = $extDb; 
+        //$db     = $wpdb; // uncomment to use it
+        
+        // Prefix of the staging site
+        $prefix = $args->prefix;
+
+        $sql = "INSERT INTO {$prefix}options (option_name,option_value) VALUES ('test2', 'value')";
+
+        error_log( 'new log' . $sql );
+
+        // Add value testvalue into prefix_options or execute any other sql query here
+        $db->query( $sql );
+        
+    }
 
     /**
      * Send out an email when the pushing proces has been finished successfully
