@@ -93,22 +93,22 @@ class wpstagingHooks {
      */
     public function executeSql( $args ) {
         global $wpdb;
+        
+        $extDb = true; // set to false to use the default $wpdb db object and to use SQL on the production databae. Set to false to execute SQL on external database
 
-        // External database object if staging site is located in separate database
-        if( !empty( $args->databaseUser ) && !empty( $args->databasePassword ) && !empty( $args->databaseDatabase ) && !empty( $args->databaseServer ) ) {
-            $extDb = new \wpdb( $args->databaseUser, str_replace( "\\\\", "\\", $args->databasePassword ), $args->databaseDatabase, $args->databaseServer );
+        // External database object
+        if( $extDb && !empty( $args->databaseUser ) && !empty( $args->databasePassword ) && !empty( $args->databaseDatabase ) && !empty( $args->databaseServer ) ) {
+            $db = new \wpdb( $args->databaseUser, str_replace( "\\\\", "\\", $args->databasePassword ), $args->databaseDatabase, $args->databaseServer );
+        } else {
+            $db = $wpdb;
         }
-
-        // Uncomment the database you want to execute sql query on
-        $db = $extDb; 
-        //$db     = $wpdb; // uncomment to use it
         
         // Prefix of the staging site
         $prefix = $args->prefix;
 
         $sql = "INSERT INTO {$prefix}options (option_name,option_value) VALUES ('test2', 'value')";
 
-        error_log( 'new log' . $sql );
+        error_log( 'Execute SQL: ' . $sql );
 
         // Add value testvalue into prefix_options or execute any other sql query here
         $db->query( $sql );
