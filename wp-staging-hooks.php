@@ -8,7 +8,6 @@
   Version: 0.0.1
   Author URI: https://wp-staging.com
  */
-
 /*
  * Copyright (c) 2019 WP Staging. All rights reserved.
  * This program is distributed in the hope that it will be useful, but
@@ -25,39 +24,78 @@ class wpstagingHooks {
      * Uncomment the actions / filters below to activate them
      */
     function __construct() {
-
-        // Keep certain plugins activated while wp staging requests are executed. Necessary if you want to use third party plugin function while using one of wp staging hooks or filters
+        /*
+         * Keep certain plugins activated while wp staging requests are executed. 
+         * Necessary if you want to use third party plugin function while using one of wp staging hooks or filters
+         */
         //update_option('wpstg_optimizer_excluded', array('wp-mail-smtp'));
-        // Run after successfull cloning
+
+        /*
+         * Run an action after after successfull cloning 
+         */
+
         //add_action( 'wpstg_cloning_complete', array($this, 'sendMail'), 10 );
         //add_action( 'wpstg_cloning_complete', array($this, 'executeSql'), 10 );
-        // Run after successfull pushing
+
+        /*
+         * Run an action after after successfull pushing 
+         */
         //add_action( 'wpstg_pushing_complete', array($this, 'pushingComplete') );
-        // Exclude Tables From Search & Replace operation / Cloning and Pushing
+        /*
+         *  Exclude Tables From Search & Replace operation / Cloning and Pushing
+         */
         //add_action( 'wpstg_searchreplace_excl_tables', array($this, 'excludeTablesSR'), 10 );
-        // Cloning: Exclude Rows From Search & Replace in wp_options
+        /*
+         *  Cloning: Exclude Rows From Search & Replace in wp_options
+         */
         //add_action( 'wpstg_clone_searchreplace_excl_rows', array($this, 'excludeRowsSR'), 10 );
-        // Cloning: Exclude Rows From Search & Replace in wp_options
+        /*
+         *  Cloning: Exclude Rows From Search & Replace in wp_options
+         */
         //add_action( 'wpstg_clone_searchreplace_excl', array($this, 'excludeStringsSR'), 10 );
-        // Cloning: Change Search & Replace Parameters
+        /*
+         *  Cloning: Change Search & Replace Parameters
+         */
         //add_action( 'wpstg_clone_searchreplace_params', array($this, 'setSRparams'), 10 );
-        // Cloning: Exclude Folders
+        /*
+         *  Cloning: Exclude Folders
+         */
         //add_action( 'wpstg_clone_excl_folders', array($this, 'excludeFolders'), 10 );
-        // Cloning: Do not Modify Table Prefix from option_name in wp_options
+        /*
+         *  Cloning: Do not Modify Table Prefix from option_name in wp_options
+         */
         //add_action( 'wpstg_excl_option_name_custom', array($this, 'wpstg_excl_option_name_custom'), 10 );
-        // Cloning: Change target hostname
-        // add_filter( "wpstg_cloning_target_hostname", array($this, 'set_cloning_target_hostname'), 10 );
-        // Cloning: Change target destination dir
+        /*
+         *  Cloning: Change target hostname
+         */
+        /*
+         *  add_filter( "wpstg_cloning_target_hostname", array($this, 'set_cloning_target_hostname'), 10 );
+         */
+        /*
+         *  Cloning: Change target destination dir
+         */
         // add_filter( "wpstg_cloning_target_dir", array($this, 'set_cloning_target_directory'), 10 );
-        // Pushing: Change Search & Replace parameters
+        /*
+         *  Pushing: Change Search & Replace parameters
+         */
         //add_action( 'wpstg_push_searchreplace_params', array($this, 'wpstg_push_custom_params'), 10 );
-        // Pushing: Exclude tables from pushing
+        /*
+         *  Pushing: Exclude tables from pushing
+         */
         //add_action( 'wpstg_push_excluded_tables', array($this, 'wpstg_push_excluded_tables'), 10 );
-        // Pushing: Exclude folders from pushing
+        /*
+         *  Pushing: Exclude folders from pushing
+         */
         //add_action( 'wpstg_push_excl_folders_custom', array($this, 'wpstg_push_directories_excl'), 10 );
-        // Pushing: Exclude files from pushing
-        //add_action( 'wpstg_push_excluded_files', array($this, 'wpstg_push_excluded_files'), 10 );
-        // Pushing: Preserve data in wp_options and exclude it from pushing
+
+        /*
+         * Pushing: Exclude files from pushing
+         */
+        add_action( 'wpstg_push_excluded_files', array($this, 'wpstg_push_excluded_files'), 10 );
+
+        /*
+         * Pushing: Preserve data in wp_options and exclude it from pushing
+         */
         //add_action( 'wpstg_preserved_options', array($this, 'wpstg_push_options_excl'), 10 );
     }
 
@@ -93,26 +131,21 @@ class wpstagingHooks {
      */
     public function executeSql( $args ) {
         global $wpdb;
-        
-        $extDb = true; // set to false to use the default $wpdb db object and to use SQL on the production databae. Set to false to execute SQL on external database
 
+        $extDb = true; // set to false to use the default $wpdb db object and to use SQL on the production databae. Set to false to execute SQL on external database
         // External database object
         if( $extDb && !empty( $args->databaseUser ) && !empty( $args->databasePassword ) && !empty( $args->databaseDatabase ) && !empty( $args->databaseServer ) ) {
             $db = new \wpdb( $args->databaseUser, str_replace( "\\\\", "\\", $args->databasePassword ), $args->databaseDatabase, $args->databaseServer );
         } else {
             $db = $wpdb;
         }
-        
+
         // Prefix of the staging site
         $prefix = $args->prefix;
-
-        $sql = "INSERT INTO {$prefix}options (option_name,option_value) VALUES ('test2', 'value')";
-
+        $sql    = "INSERT INTO {$prefix}options (option_name,option_value) VALUES ('test2', 'value')";
         error_log( 'Execute SQL: ' . $sql );
-
         // Add value testvalue into prefix_options or execute any other sql query here
         $db->query( $sql );
-        
     }
 
     /**
@@ -236,9 +269,10 @@ class wpstagingHooks {
 
     /**
      * Pushing: Exclude files from pushing
+     * You can use wildcard like *.log (exclude all log files)
      */
     function wpstg_push_excluded_files( $default ) {
-        $files = array('custom-file', 'custom-file2');
+        $files = array('custom-file', 'custom-file2', '*LOG-');
         return array_merge( $default, $files );
     }
 
@@ -256,5 +290,3 @@ class wpstagingHooks {
 
 // Launch it
 new wpstagingHooks();
-
-
