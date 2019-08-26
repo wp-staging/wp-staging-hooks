@@ -272,7 +272,7 @@ class wpstagingHooks {
      * You can use wildcard like *.log (exclude all log files)
      */
     function wpstg_push_excluded_files( $default ) {
-        $files = array('custom-file', 'custom-file2', '*LOG-');
+        $files = array('custom-file', '*LOG-*', '*.logs');
         return array_merge( $default, $files );
     }
 
