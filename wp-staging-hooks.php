@@ -31,16 +31,23 @@ class wpstagingHooks {
         //update_option('wpstg_optimizer_excluded', array('wp-mail-smtp'));
 
         /*
-         * Run an action after after successfull cloning 
+         * Run an action after after successfull cloning on the prod site
          */
 
         //add_action( 'wpstg_cloning_complete', array($this, 'sendMail'), 10 );
         //add_action( 'wpstg_cloning_complete', array($this, 'executeSql'), 10 );
 
         /*
-         * Run an action after after successfull pushing 
+         * Run an action after after successfull pushing on the prod site
          */
         //add_action( 'wpstg_pushing_complete', array($this, 'pushingComplete') );
+
+
+        /*
+         * Cloning: Run an action after after successfull cloning on the staging site
+         */
+        //add_action( 'wpstg_clone_action_staging', array($this, 'wpstg_execute_after_cloning' ), 10);
+
         /*
          *  Exclude Tables From Search & Replace operation / Cloning and Pushing
          */
@@ -91,7 +98,7 @@ class wpstagingHooks {
         /*
          * Pushing: Exclude files from pushing
          */
-        add_action( 'wpstg_push_excluded_files', array($this, 'wpstg_push_excluded_files'), 10 );
+        //add_action( 'wpstg_push_excluded_files', array($this, 'wpstg_push_excluded_files'), 10 );
 
         /*
          * Pushing: Preserve data in wp_options and exclude it from pushing
@@ -284,6 +291,13 @@ class wpstagingHooks {
     function wpstg_push_options_excl( $options ) {
         $options[] = 'siteurl';
         return $options;
+    }
+
+    /**
+     * Cloning: This function will be executed after cloning on staging site
+     */
+    function wpstg_execute_after_cloning() {
+        // add some code 
     }
 
 }
