@@ -199,11 +199,11 @@ class wpstagingHooks {
      */
     public function setSRparams( $args ) {
         // Add new strings to search & replace array
-        $args['search_for'][]     = '%2F%2Fwww.example.com%2staging%2';
-        $args['search_for'][]     = '//www.example2.com/staging/';
-        $args['replace_with'][]   = '%2F%2Fwww.example.com%2';
-        $args['replace_with'][]   = '//www.example2.com/';
-        
+        $args['search_for'][]   = '%2F%2Fwww.example.com%2Fstaging%2F';
+        $args['search_for'][]   = '//www.example2.com/staging/';
+        $args['replace_with'][] = '%2F%2Fwww.example.com%2F';
+        $args['replace_with'][] = '//www.example2.com/';
+
         // Default values - You can change these
         $args['replace_guids']    = 'off';
         $args['dry_run']          = 'off';
@@ -211,7 +211,7 @@ class wpstagingHooks {
         $args['replace_guids']    = 'off';
         $args['replace_mails']    = 'off';
         $args['skip_transients']  = 'on';
-        
+
         return $args;
     }
 
@@ -243,13 +243,14 @@ class wpstagingHooks {
      * Pushing: Change Search & Replace parameters
      */
     public function wpstg_push_custom_params( $args ) {
+
+        // Add new strings to search & replace array
+        $args['search_for'][]   = '%2F%2Fwww.example.com%2Fstaging%2F';
+        $args['search_for'][]   = '//www.example2.com/staging/';
+        $args['replace_with'][] = '%2F%2Fwww.example.com%2F';
+        $args['replace_with'][] = '//www.example2.com/';
+
         // Default values - Can be changed
-        $args['search_for']       = array_merge(
-                $args['search_for'], array('SEARCHSTRING', 'SEARCHSTRING2')
-        );
-        $args['replace_with']     = array_merge(
-                $args['replace_with'], array('REPLACESTRING', 'REPLACESTRING2')
-        );
         $args['replace_guids']    = 'off';
         $args['dry_run']          = 'off';
         $args['case_insensitive'] = false;
