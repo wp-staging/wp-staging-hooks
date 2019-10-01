@@ -188,7 +188,7 @@ class wpstagingHooks {
     }
 
     /**
-     * Exclude certain strings srom Search & Replace operations
+     * Exclude certain strings from Search & Replace operations
      */
     public function excludeStringsSR() {
         return array('blog.localhost.com', 'blog1.localhost.com');
