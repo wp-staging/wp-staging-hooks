@@ -195,22 +195,23 @@ class wpstagingHooks {
     }
 
     /**
-     * Cloning: Change Search & Replace Parameters
+     * Cloning: Add new Search & Replace rules on top of existing ones or change existing ones entirely
      */
     public function setSRparams( $args ) {
-        // Default values - Can be changed
-        $args['search_for']       = array_merge(
-                $args['search_for'], array('SEARCHSTRING', 'SEARCHSTRING2')
-        );
-        $args['replace_with']     = array_merge(
-                $args['replace_with'], array('REPLACESTRING', 'REPLACESTRING2')
-        );
+        // Add new strings to search & replace array
+        $args['search_for'][]     = '%2F%2Fwww.example.com%2staging%2';
+        $args['search_for'][]     = '//www.example2.com/staging/';
+        $args['replace_with'][]   = '%2F%2Fwww.example.com%2';
+        $args['replace_with'][]   = '//www.example2.com/';
+        
+        // Default values - You can change these
         $args['replace_guids']    = 'off';
         $args['dry_run']          = 'off';
         $args['case_insensitive'] = false;
         $args['replace_guids']    = 'off';
         $args['replace_mails']    = 'off';
         $args['skip_transients']  = 'on';
+        
         return $args;
     }
 
