@@ -31,20 +31,19 @@ class wpstagingHooks {
         //update_option('wpstg_optimizer_excluded', array('wp-mail-smtp'));
 
         /*
-         * Run an action after after successfull cloning on the prod site
+         * Run an action after after successful cloning on the prod site
          */
 
         //add_action( 'wpstg_cloning_complete', array($this, 'sendMail'), 10 );
         //add_action( 'wpstg_cloning_complete', array($this, 'executeSql'), 10 );
 
         /*
-         * Run an action after after successfull pushing on the prod site
+         * Run an action after after successful pushing on the prod site
          */
         //add_action( 'wpstg_pushing_complete', array($this, 'pushingComplete') );
 
 
         /*
-         * Cloning: Run an action after after successfull cloning on the staging site
          */
         //add_action( 'wpstg_clone_action_staging', array($this, 'wpstg_execute_after_cloning' ), 10);
 
