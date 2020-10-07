@@ -46,7 +46,7 @@ class wpstagingHooks {
         /*
          * Cloning: Run an action after after successfull cloning on the staging site
          */
-        //add_action( 'wpstg_clone_action_staging', array($this, 'wpstg_execute_after_cloning' ), 10);
+        //add_action( 'wpstg.clone_first_run', array($this, 'wpstg_execute_after_cloning' ), 10);
 
         /*
          *  Exclude Tables From Search & Replace operation / Cloning and Pushing
