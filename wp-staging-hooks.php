@@ -217,9 +217,10 @@ class wpstagingHooks {
 
     /**
      * Cloning: Exclude Folders
+     * This must be the path relative to the wp-content folder
      */
     public function excludeFolders( $defaultFolders ) {
-        $folders = array('wordpress-seo', 'custom-folder');
+        $folders = array('plugins/wordpress-seo', 'custom-folder');
         return array_merge( $defaultFolders, $folders );
     }
 
