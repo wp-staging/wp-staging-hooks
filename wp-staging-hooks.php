@@ -5,9 +5,10 @@
   Plugin URI:
   Description: Extend WP Staging by using actions and filters.
   Author: WP Staging
-  Version: 0.0.1
+  Version: 0.0.2
   Author URI: https://wp-staging.com
  */
+
 /*
  * Copyright (c) 2019 WP Staging. All rights reserved.
  * This program is distributed in the hope that it will be useful, but
@@ -18,12 +19,14 @@
  * http://www.opensource.org/licenses/gpl-license.php
  */
 
-class wpstagingHooks {
+class wpstagingHooks
+{
 
     /**
      * Uncomment the actions / filters below to activate them
      */
-    function __construct() {
+    function __construct()
+    {
         /*
          * Keep certain plugins activated while wp staging requests are executed. 
          * Necessary if you want to use third party plugin function while using one of wp staging hooks or filters
@@ -111,7 +114,8 @@ class wpstagingHooks {
      * @param string $dest
      * @return string
      */
-    public function set_cloning_target_hostname( $dest ) {
+    public function set_cloning_target_hostname($dest)
+    {
         $dest = "https://example.com";
         return $dest;
     }
@@ -121,7 +125,8 @@ class wpstagingHooks {
      * @param string $dest
      * @return string
      */
-    public function set_cloning_target_directory( $dest ) {
+    public function set_cloning_target_directory($dest)
+    {
         $dest = "/custompath/";
         return $dest;
     }
@@ -129,88 +134,95 @@ class wpstagingHooks {
     /**
      * Send out an email when the cloning proces has been finished successfully
      */
-    public function sendMail() {
-        wp_mail( 'test@example.com', 'WP Staging cloning process has been finished', 'body sample text' );
+    public function sendMail()
+    {
+        wp_mail('test@example.com', 'WP Staging cloning process has been finished', 'body sample text');
     }
 
     /**
      * Execute custom sql query after cloning on staging site
      */
-    public function executeSql( $args ) {
+    public function executeSql($args)
+    {
         global $wpdb;
 
         $extDb = true; // set to false to use the default $wpdb db object and to use SQL on the production databae. Set to false to execute SQL on external database
         // External database object
-        if( $extDb && !empty( $args->databaseUser ) && !empty( $args->databasePassword ) && !empty( $args->databaseDatabase ) && !empty( $args->databaseServer ) ) {
-            $db = new \wpdb( $args->databaseUser, str_replace( "\\\\", "\\", $args->databasePassword ), $args->databaseDatabase, $args->databaseServer );
+        if ($extDb && !empty($args->databaseUser) && !empty($args->databasePassword) && !empty($args->databaseDatabase) && !empty($args->databaseServer)) {
+            $db = new \wpdb($args->databaseUser, str_replace("\\\\", "\\", $args->databasePassword), $args->databaseDatabase, $args->databaseServer);
         } else {
             $db = $wpdb;
         }
 
         // Prefix of the staging site
         $prefix = $args->prefix;
-        $sql    = "INSERT INTO {$prefix}options (option_name,option_value) VALUES ('test2', 'value')";
-        error_log( 'Execute SQL: ' . $sql );
+        $sql = "INSERT INTO {$prefix}options (option_name,option_value) VALUES ('test2', 'value')";
+        error_log('Execute SQL: ' . $sql);
         // Add value testvalue into prefix_options or execute any other sql query here
-        $db->query( $sql );
+        $db->query($sql);
     }
 
     /**
      * Send out an email when the pushing proces has been finished successfully
      */
-    public function pushingComplete() {
-        wp_mail( 'test@example.com', 'WP Staging cloning process has been finished', 'body sample text' );
+    public function pushingComplete()
+    {
+        wp_mail('test@example.com', 'WP Staging cloning process has been finished', 'body sample text');
     }
 
     /**
      * Exclude certain Tables From Search & Replace operation
-     * 
-     * Use this if the search & replace process eats up a lot of your available memory 
-     * and the cloning or pushing process failed with a ‘memory exhausted error‘.  
+     *
+     * Use this if the search & replace process eats up a lot of your available memory
+     * and the cloning or pushing process failed with a ‘memory exhausted error‘.
      * You can also use this to improve the speed of the cloning and pushing process.
-     * 
-     * Exclude tables which do not need any search & replacement of strings! 
-     * These can be tables which contains visitor stats, IP addresses or similar. 
-     * After excluding these tables you can increase the DB Search & Replace limit in 
+     *
+     * Exclude tables which do not need any search & replacement of strings!
+     * These can be tables which contains visitor stats, IP addresses or similar.
+     * After excluding these tables you can increase the DB Search & Replace limit in
      * WP Staging settings to a higher value to get better performance.
      */
-    public function excludeTablesSR( $tables ) {
+    public function excludeTablesSR($tables)
+    {
         $addTables = array('_posts', '_postmeta');
-        return array_merge( $tables, $addTables );
+        return array_merge($tables, $addTables);
     }
 
     /**
      * Exclude certain rows in table wp_options from Search & Replace operation
      */
-    public function excludeRowsSR( $default ) {
+    public function excludeRowsSR($default)
+    {
         $rows = array('siteurl', 'home');
-        return array_merge( $default, $rows );
+        return array_merge($default, $rows);
     }
 
     /**
      * Exclude certain strings from Search & Replace operations
      */
-    public function excludeStringsSR() {
+    public function excludeStringsSR()
+    {
         return array('blog.localhost.com', 'blog1.localhost.com');
     }
 
     /**
      * Cloning: Add new Search & Replace rules on top of existing ones or change existing ones entirely
      */
-    public function setSRparams( $args ) {
+    public function setSRparams($args)
+    {
         // Add new strings to search & replace array
-        $args['search_for'][]   = '%2F%2Fwww.example.com%2Fstaging%2F';
-        $args['search_for'][]   = '//www.example2.com/staging/';
+        $args['search_for'][] = '%2F%2Fwww.example.com%2Fstaging%2F';
+        $args['search_for'][] = '//www.example2.com/staging/';
         $args['replace_with'][] = '%2F%2Fwww.example.com%2F';
         $args['replace_with'][] = '//www.example2.com/';
 
         // Default values - You can change these
-        $args['replace_guids']    = 'off';
-        $args['dry_run']          = 'off';
+        $args['replace_guids'] = 'off';
+        $args['dry_run'] = 'off';
         $args['case_insensitive'] = false;
-        $args['replace_guids']    = 'off';
-        $args['replace_mails']    = 'off';
-        $args['skip_transients']  = 'on';
+        $args['replace_guids'] = 'off';
+        $args['replace_mails'] = 'off';
+        $args['skip_transients'] = 'on';
 
         return $args;
     }
@@ -219,71 +231,86 @@ class wpstagingHooks {
      * Cloning: Exclude Folders
      * This must be the path relative to the wp-content folder
      */
-    public function excludeFolders( $defaultFolders ) {
-        $folders = array('plugins/wordpress-seo', 'custom-folder');
-        return array_merge( $defaultFolders, $folders );
+    public function excludeFolders($defaultFolders)
+    {
+        $folders = [
+            '/path/to/site/wp-content/plugin/wordpress-seo', // Absolute path
+            '**/node_modules', // Wildcard path
+            '*.zip' // Extension
+        ];
+        return array_merge($defaultFolders, $folders);
     }
 
     /**
      * Excluded folders relative to the wp-content folder when cloning multisites
      */
-    public function multisiteExcludeFoldersCloning( $defaultFolders ) {
-        $folders = array('plugins/wordpress-seo', 'themes/custom-folder');
-        return array_merge( $defaultFolders, $folders );
+    public function multisiteExcludeFoldersCloning($defaultFolders)
+    {
+        $folders = [
+            '/path/to/site/wp-content/plugin/wordpress-seo', // Absolute path
+            '**/node_modules', // Wildcard path
+            '*.zip' // Extension
+        ];
+        return array_merge($defaultFolders, $folders);
     }
 
     /**
      * Cloning: Do not Modify Table Prefix for particular rows in option_name
      */
-    public function wpstg_excl_option_name_custom( $args ) {
+    public function wpstg_excl_option_name_custom($args)
+    {
         $cols = array('wp_mail_smtp', 'wp_mail_smtp_version');
-        return array_merge( $args, $cols );
+        return array_merge($args, $cols);
     }
 
     /**
      * Pushing: Change Search & Replace parameters
      */
-    public function wpstg_push_custom_params( $args ) {
+    public function wpstg_push_custom_params($args)
+    {
 
         // Add new strings to search & replace array
-        $args['search_for'][]   = '%2F%2Fwww.example.com%2Fstaging%2F';
-        $args['search_for'][]   = '//www.example2.com/staging/';
+        $args['search_for'][] = '%2F%2Fwww.example.com%2Fstaging%2F';
+        $args['search_for'][] = '//www.example2.com/staging/';
         $args['replace_with'][] = '%2F%2Fwww.example.com%2F';
         $args['replace_with'][] = '//www.example2.com/';
 
         // Default values - Can be changed
-        $args['replace_guids']    = 'off';
-        $args['dry_run']          = 'off';
+        $args['replace_guids'] = 'off';
+        $args['dry_run'] = 'off';
         $args['case_insensitive'] = false;
-        $args['replace_guids']    = 'off';
-        $args['replace_mails']    = 'off';
-        $args['skip_transients']  = 'on';
+        $args['replace_guids'] = 'off';
+        $args['replace_mails'] = 'off';
+        $args['skip_transients'] = 'on';
         return $args;
     }
 
     /**
      * Pushing: Change Search & Replace parameters
      */
-    function wpstg_push_excluded_tables( $tables ) {
+    function wpstg_push_excluded_tables($tables)
+    {
         $customTables = array('_options', '_posts');
-        return array_merge( $tables, $customTables );
+        return array_merge($tables, $customTables);
     }
 
     /**
      * Pushing: Exclude folders from pushing
      */
-    function wpstg_push_directories_excl( $default ) {
+    function wpstg_push_directories_excl($default)
+    {
         $dirs = array('custom-folder', 'custom-folder2');
-        return array_merge( $default, $dirs );
+        return array_merge($default, $dirs);
     }
 
     /**
      * Pushing: Exclude files from pushing
      * You can use wildcard like *.log (exclude all log files)
      */
-    function wpstg_push_excluded_files( $default ) {
+    function wpstg_push_excluded_files($default)
+    {
         $files = array('custom-file', '*LOG-*', '*.logs');
-        return array_merge( $default, $files );
+        return array_merge($default, $files);
     }
 
     /**
@@ -291,7 +318,8 @@ class wpstagingHooks {
      * The example below preserves the value of the ‘siteurl’ on the live site.
      * Any number of additional options may be added.
      */
-    function wpstg_push_options_excl( $options ) {
+    function wpstg_push_options_excl($options)
+    {
         $options[] = 'siteurl';
         return $options;
     }
@@ -299,7 +327,8 @@ class wpstagingHooks {
     /**
      * Cloning: This function will be executed after cloning on staging site
      */
-    function wpstg_execute_after_cloning() {
+    function wpstg_execute_after_cloning()
+    {
         // add some code 
     }
 
