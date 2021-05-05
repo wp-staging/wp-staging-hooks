@@ -88,7 +88,7 @@ class wpstagingHooks
         /*
          *  Pushing: Change Search & Replace parameters
          */
-        //add_action( 'wpstg_push_searchreplace_params', array($this, 'wpstg_push_custom_params'), 10 );
+        add_filter( 'wpstg_push_searchreplace_params', array($this, 'wpstg_push_custom_params'), 10 );
         /*
          *  Pushing: Exclude tables from pushing
          */
@@ -272,8 +272,11 @@ class wpstagingHooks
         // Add new strings to search & replace array
         $args['search_for'][] = '%2F%2Fwww.example.com%2Fstaging%2F';
         $args['search_for'][] = '//www.example2.com/staging/';
+        $args['search_for'][] = '\/\/www.example2.com\/staging';
+      
         $args['replace_with'][] = '%2F%2Fwww.example.com%2F';
         $args['replace_with'][] = '//www.example2.com/';
+        $args['search_for'][] = '\/\/www.example2.com';
 
         // Default values - Can be changed
         $args['replace_guids'] = 'off';
