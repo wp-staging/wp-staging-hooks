@@ -5,7 +5,7 @@
   Plugin URI:
   Description: Extend WP Staging by using actions and filters.
   Author: WP Staging
-  Version: 0.0.2
+  Version: 0.0.3
   Author URI: https://wp-staging.com
  */
 
