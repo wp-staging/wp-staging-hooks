@@ -72,6 +72,10 @@ class wpstagingHooks
          */
         //add_action( 'wpstg_clone_excl_folders', array($this, 'excludeFolders'), 10 );
         /*
+         *  Cloning: Exclude Folders (Multisites)
+         */
+        //add_action( 'wpstg_clone_mu_excl_folders', array($this, 'multisiteExcludeFoldersCloning'), 10 );
+        /*
          *  Cloning: Do not Modify Table Prefix from option_name in wp_options
          */
         //add_action( 'wpstg_excl_option_name_custom', array($this, 'wpstg_excl_option_name_custom'), 10 );
@@ -229,12 +233,13 @@ class wpstagingHooks
 
     /**
      * Cloning: Exclude Folders
-     * This must be the path relative to the wp-content folder
+     * These paths must be the path relative to the wordpress root folder
+     * These exclude rules will not be applied to wp-admin, wp-includes
      */
     public function excludeFolders($defaultFolders)
     {
         $folders = [
-            '/path/to/site/wp-content/plugin/wordpress-seo', // Absolute path
+            '/wp-content/plugin/wordpress-seo', // Relative path to your wordpress root path. Remember to add leading slash
             '**/node_modules', // Wildcard path
             '*.zip' // Extension
         ];
@@ -242,12 +247,13 @@ class wpstagingHooks
     }
 
     /**
-     * Excluded folders relative to the wp-content folder when cloning multisites
+     * Excluded paths relative to the wordpress root folder when cloning multisites
+     * These exclude rules will not be applied to wp-admin, wp-includes
      */
-    public function multisiteExcludeFoldersCloning($defaultFolders)
+    public function multisiteExcludePathsCloning($defaultFolders)
     {
         $folders = [
-            '/path/to/site/wp-content/plugin/wordpress-seo', // Absolute path
+            '/wp-content/plugin/wordpress-seo', // Relative path to your wordpress root path, remember to add leading slash 
             '**/node_modules', // Wildcard path
             '*.zip' // Extension
         ];
