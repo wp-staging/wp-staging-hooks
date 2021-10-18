@@ -5,7 +5,7 @@
   Plugin URI:
   Description: Extend WP Staging by using actions and filters.
   Author: WP Staging
-  Version: 0.0.4
+  Version: 0.0.5
   Author URI: https://wp-staging.com
  */
 
@@ -82,13 +82,17 @@ class wpstagingHooks
         /*
          *  Cloning: Change target hostname
          */
-        /*
-         *  add_filter( "wpstg_cloning_target_hostname", array($this, 'set_cloning_target_hostname'), 10 );
-         */
+        // add_filter( "wpstg_cloning_target_hostname", array($this, 'set_cloning_target_hostname'), 10 );
         /*
          *  Cloning: Change target destination dir
          */
         // add_filter( "wpstg_cloning_target_dir", array($this, 'set_cloning_target_directory'), 10 );
+
+        /*
+         * Cloning: Filter Database Rows from copying
+         */
+        // add_filter( "wpstg.cloning.database.filterRows", array($this, 'filter_cloning_database_rows'), 10 );
+
         /*
          *  Pushing: Change Search & Replace parameters
          */
@@ -111,6 +115,11 @@ class wpstagingHooks
          * Pushing: Preserve data in wp_options and exclude it from pushing
          */
         //add_action( 'wpstg_preserved_options', array($this, 'wpstg_push_options_excl'), 10 );
+
+        /*
+         * Pushing: Filter Database Rows from copying
+         */
+        // add_filter( "wpstg.pushing.database.filterRows", array($this, 'filter_pushing_database_rows'), 10 );
     }
 
     /**
@@ -341,6 +350,67 @@ class wpstagingHooks
         // add some code 
     }
 
+    /**
+     * Cloning: Filter Database rows from copying
+     */
+    function filter_cloning_database_rows($filters)
+    {
+        // Use prefix of production site database.
+        $myFilters = [
+            // will skip posts where post_type = 'coupon'
+            'wp_posts' => [
+                'post_type' => [
+                    'operator' => '<>',
+                    'value' => 'coupon'
+                ]
+            ],
+            // will filter postmeta depending upon filtered data in wp_posts, see above wp_posts filter
+            'wp_postmeta' => [
+                'join' => [
+                    'table' => 'wp_posts',
+                    'primaryKey' => 'ID',
+                    'foreignKey' => 'post_id',
+                ]
+            ]
+        ];
+    
+        return array_merge($filters, $myFilters);
+    }
+
+    /**
+     * Pushing: Filter Database rows from copying
+     */
+    function filter_pushing_database_rows($filters)
+    {
+        // Use prefix of staging site database i.e. wpstg0
+        $filters = [
+            // will skip options where option_name = 'wpstg_is_staging_site'
+            'wpstg0_options' => [
+                'option_name' => [
+                    'operator' => '<>',
+                    'value' => 'wpstg_is_staging_site'
+                ]
+            ],
+            // will only copy posts where post_title LIKE 'Hello%' AND post_status = 'publish'
+            'wpstg0_posts' => [
+                'post_title' => [
+                    'operator' => 'LIKE',
+                    'value' => 'Hello%'
+                ],
+                'post_status' => 'publish'
+            ],
+            // will filter postmeta depending upon filtered data in wp_posts, see above wp_posts filter
+            'wpstg0_postmeta' => [
+                'join' => [
+                    'table' => 'wp_posts',
+                    'primaryKey' => 'ID',
+                    'foreignKey' => 'post_id',
+                ]
+            ]
+        ];
+
+        return $filters;
+    }
 }
 
 // Launch it
