@@ -89,9 +89,9 @@ class wpstagingHooks
         // add_filter( "wpstg_cloning_target_dir", array($this, 'set_cloning_target_directory'), 10 );
 
         /*
-         * Cloning: Filter Database Rows from copying
+         * Cloning: Copy specific database rows during cloning
          */
-        // add_filter( "wpstg.cloning.database.filterRows", array($this, 'filter_cloning_database_rows'), 10 );
+        // add_filter( "wpstg.cloning.database.queryRows", array($this, 'query_cloning_database_rows'), 10 );
 
         /*
          *  Pushing: Change Search & Replace parameters
@@ -117,9 +117,9 @@ class wpstagingHooks
         //add_action( 'wpstg_preserved_options', array($this, 'wpstg_push_options_excl'), 10 );
 
         /*
-         * Pushing: Filter Database Rows from copying
+         * Pushing: Copy specific database rows during push
          */
-        // add_filter( "wpstg.pushing.database.filterRows", array($this, 'filter_pushing_database_rows'), 10 );
+        // add_filter( "wpstg.pushing.database.queryRows", array($this, 'query_pushing_database_rows'), 10 );
     }
 
     /**
@@ -351,20 +351,20 @@ class wpstagingHooks
     }
 
     /**
-     * Cloning: Filter Database rows from copying
+     * Cloning: Query specific database rows
      */
-    function filter_cloning_database_rows($filters)
+    function query_cloning_database_rows($filters)
     {
         // Use prefix of production site database.
         $myFilters = [
-            // will skip posts where post_type = 'coupon'
+            // copy posts where post type is not 'coupon'
             'wp_posts' => [
                 'post_type' => [
                     'operator' => '<>',
                     'value' => 'coupon'
                 ]
             ],
-            // will filter postmeta depending upon filtered data in wp_posts, see above wp_posts filter
+            // query wp_postmeta table depending upon options selected for wp_posts table
             'wp_postmeta' => [
                 'join' => [
                     'table' => 'wp_posts',
@@ -378,20 +378,20 @@ class wpstagingHooks
     }
 
     /**
-     * Pushing: Filter Database rows from copying
+     * Pushing: Query specific database rows
      */
-    function filter_pushing_database_rows($filters)
+    function query_pushing_database_rows($filters)
     {
         // Use prefix of staging site database i.e. wpstg0
         $filters = [
-            // will skip options where option_name = 'wpstg_is_staging_site'
+            // copy options where option_name is not 'wpstg_is_staging_site'
             'wpstg0_options' => [
                 'option_name' => [
                     'operator' => '<>',
                     'value' => 'wpstg_is_staging_site'
                 ]
             ],
-            // will only copy posts where post_title LIKE 'Hello%' AND post_status = 'publish'
+            // copy posts where post_title LIKE 'Hello%' AND post_status is 'publish'
             'wpstg0_posts' => [
                 'post_title' => [
                     'operator' => 'LIKE',
@@ -399,7 +399,7 @@ class wpstagingHooks
                 ],
                 'post_status' => 'publish'
             ],
-            // will filter postmeta depending upon filtered data in wp_posts, see above wp_posts filter
+            // query wpstg0_postmeta table depending upon options selected for wpstg0_posts table
             'wpstg0_postmeta' => [
                 'join' => [
                     'table' => 'wp_posts',
