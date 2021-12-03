@@ -5,7 +5,7 @@
   Plugin URI:
   Description: Extend WP Staging by using actions and filters.
   Author: WP Staging
-  Version: 0.0.4
+  Version: 0.0.5
   Author URI: https://wp-staging.com
  */
 
@@ -82,13 +82,17 @@ class wpstagingHooks
         /*
          *  Cloning: Change target hostname
          */
-        /*
-         *  add_filter( "wpstg_cloning_target_hostname", array($this, 'set_cloning_target_hostname'), 10 );
-         */
+        // add_filter( "wpstg_cloning_target_hostname", array($this, 'set_cloning_target_hostname'), 10 );
         /*
          *  Cloning: Change target destination dir
          */
         // add_filter( "wpstg_cloning_target_dir", array($this, 'set_cloning_target_directory'), 10 );
+
+        /*
+         * Cloning: Copy specific database rows during cloning
+         */
+        // add_filter( "wpstg.cloning.database.queryRows", array($this, 'query_cloning_database_rows'), 10 );
+
         /*
          *  Pushing: Change Search & Replace parameters
          */
@@ -111,6 +115,11 @@ class wpstagingHooks
          * Pushing: Preserve data in wp_options and exclude it from pushing
          */
         //add_action( 'wpstg_preserved_options', array($this, 'wpstg_push_options_excl'), 10 );
+
+        /*
+         * Pushing: Copy specific database rows during push
+         */
+        // add_filter( "wpstg.pushing.database.queryRows", array($this, 'query_pushing_database_rows'), 10 );
     }
 
     /**
@@ -341,6 +350,67 @@ class wpstagingHooks
         // add some code 
     }
 
+    /**
+     * Cloning: Query specific database rows
+     */
+    function query_cloning_database_rows($filters)
+    {
+        // Use prefix of production site database.
+        $myFilters = [
+            // copy posts where post type is not 'coupon'
+            'wp_posts' => [
+                'post_type' => [
+                    'operator' => '<>',
+                    'value' => 'coupon'
+                ]
+            ],
+            // query wp_postmeta table depending upon options selected for wp_posts table
+            'wp_postmeta' => [
+                'join' => [
+                    'table' => 'wp_posts',
+                    'primaryKey' => 'ID',
+                    'foreignKey' => 'post_id',
+                ]
+            ]
+        ];
+    
+        return array_merge($filters, $myFilters);
+    }
+
+    /**
+     * Pushing: Query specific database rows
+     */
+    function query_pushing_database_rows($filters)
+    {
+        // Use prefix of staging site database i.e. wpstg0
+        $filters = [
+            // copy options where option_name is not 'wpstg_is_staging_site'
+            'wpstg0_options' => [
+                'option_name' => [
+                    'operator' => '<>',
+                    'value' => 'wpstg_is_staging_site'
+                ]
+            ],
+            // copy posts where post_title LIKE 'Hello%' AND post_status is 'publish'
+            'wpstg0_posts' => [
+                'post_title' => [
+                    'operator' => 'LIKE',
+                    'value' => 'Hello%'
+                ],
+                'post_status' => 'publish'
+            ],
+            // query wpstg0_postmeta table depending upon options selected for wpstg0_posts table
+            'wpstg0_postmeta' => [
+                'join' => [
+                    'table' => 'wp_posts',
+                    'primaryKey' => 'ID',
+                    'foreignKey' => 'post_id',
+                ]
+            ]
+        ];
+
+        return $filters;
+    }
 }
 
 // Launch it
