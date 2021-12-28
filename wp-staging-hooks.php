@@ -2,15 +2,15 @@
 
 /*
   Plugin Name: WP Staging Hooks
-  Plugin URI:
-  Description: Extend WP Staging by using actions and filters.
-  Author: WP Staging
-  Version: 0.0.5
+  Plugin URI: https://wp-staging.com
+  Description: Extend WP STAGING by using actions and filters.
+  Author: WP STAGING
+  Version: 1.0.1
   Author URI: https://wp-staging.com
  */
 
 /*
- * Copyright (c) 2019 WP Staging. All rights reserved.
+ * Copyright (c) 2021 WP STAGING. All rights reserved.
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -67,6 +67,12 @@ class wpstagingHooks
          *  Cloning: Change Search & Replace Parameters
          */
         //add_action( 'wpstg_clone_searchreplace_params', array($this, 'setSRparams'), 10 );
+
+        /*
+         * Cloning: Exclude files from cloning
+         */
+        //add_action( 'wpstg_clone_excluded_files', array($this, 'wpstg_clone_excluded_files'), 10 );
+
         /*
          *  Cloning: Exclude Folders
          */
@@ -241,6 +247,16 @@ class wpstagingHooks
     }
 
     /**
+     * Cloning: Exclude files from cloning
+     * Example: You can use a wildcard pattern like *.log to exclude all log files
+     */
+    function wpstg_clone_excluded_files($default)
+    {
+        $files = array('custom-file', '*LOG-*', '*.logs');
+        return array_merge($default, $files);
+    }
+
+    /**
      * Cloning: Exclude Folders
      * These paths must be the path relative to the wordpress root folder
      * These exclude rules will not be applied to wp-admin, wp-includes
@@ -323,7 +339,7 @@ class wpstagingHooks
 
     /**
      * Pushing: Exclude files from pushing
-     * You can use wildcard like *.log (exclude all log files)
+     * Example: You can use a wildcard pattern like *.log to exclude all log files
      */
     function wpstg_push_excluded_files($default)
     {
