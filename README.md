@@ -14,3 +14,7 @@ Setup
 
 Open the file wp-staging-hooks.php file and take a look at the `__construct` function. 
 Uncomment all filters or actions you like to use.
+
+Documentation
+-------------
+https://wp-staging.com/docs/actions-and-filters/
