@@ -126,6 +126,21 @@ class wpstagingHooks
          * Pushing: Copy specific database rows during push
          */
         // add_filter( "wpstg.pushing.database.queryRows", array($this, 'query_pushing_database_rows'), 10 );
+
+        /*
+         * Backup: Exclude file extension from backup
+         */
+        // add_filter( 'wpstg.export.files.ignore.file_extension', 'wpstg_export_files_ignore_extensions');
+
+        /*
+         * Backup: Exclude files bigger than the given size from backup
+         */
+        // add_filter( 'wpstg.export.files.ignore.file_bigger_than', 'wpstg_backup_files_ignore_files_bigger_than');
+
+        /*
+         * Backup: Exclude files with particular extensions larger than the given file size from backup
+         */
+        // add_filter( 'wpstg.export.files.ignore.file_extension_bigger_than', 'wpstg_backup_files_ignore_files_w_extension_bigger_than');
     }
 
     /**
@@ -426,6 +441,34 @@ class wpstagingHooks
         ];
 
         return $filters;
+    }
+
+    /**
+     * Backup: Exclude files bigger than the given size from backup
+     * Allow user to exclude certain file extensions from being backup exported
+     */
+    function wpstg_backup_files_ignore_extensions($default_excluded){
+        return array_merge($default_excluded, ['zip', 'gz']);
+    }
+
+    /**
+     * Backup: Exclude files bigger than the given size from backup
+     * Allow user to exclude files bigger than given size from being backup exported
+     */
+    function wpstg_backup_files_ignore_files_bigger_than($default){
+        return 10 * MB_IN_BYTES
+    }
+
+    /**
+     * Backup: Exclude files with particular extensions larger than the given file size from backup
+     * Allow users to exclude files with extensions larger than the given size from being exported
+     */
+    function wpstg_backup_files_ignore_files_w_extension_bigger_than($default){
+        $ignoreFiles = [
+            'gz' => 10 * MB_IN_BYTES, 
+            'tar' => 20 * MB_IN_BYTES
+        ]
+        return array_merge($default, $ignoreFiles);
     }
 }
 
