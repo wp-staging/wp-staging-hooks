@@ -456,7 +456,7 @@ class wpstagingHooks
      * Allow user to exclude files bigger than given size from being backup exported
      */
     function wpstg_backup_files_ignore_files_bigger_than($default){
-        return 10 * MB_IN_BYTES
+        return 10 * MB_IN_BYTES;
     }
 
     /**
@@ -467,7 +467,7 @@ class wpstagingHooks
         $ignoreFiles = [
             'gz' => 10 * MB_IN_BYTES, 
             'tar' => 20 * MB_IN_BYTES
-        ]
+        ];
         return array_merge($default, $ignoreFiles);
     }
 }
