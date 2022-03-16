@@ -5,7 +5,7 @@
   Plugin URI: https://wp-staging.com
   Description: Extend WP STAGING by using actions and filters.
   Author: WP STAGING
-  Version: 1.0.1
+  Version: 1.0.2
   Author URI: https://wp-staging.com
  */
 
@@ -102,7 +102,7 @@ class wpstagingHooks
         /*
          *  Pushing: Change Search & Replace parameters
          */
-        add_filter( 'wpstg_push_searchreplace_params', array($this, 'wpstg_push_custom_params'), 10 );
+        // add_filter( 'wpstg_push_searchreplace_params', array($this, 'wpstg_push_custom_params'), 10 );
         /*
          *  Pushing: Exclude tables from pushing
          */
@@ -125,22 +125,22 @@ class wpstagingHooks
         /*
          * Pushing: Copy specific database rows during push
          */
-        // add_filter( "wpstg.pushing.database.queryRows", array($this, 'query_pushing_database_rows'), 10 );
+        //add_filter( "wpstg.pushing.database.queryRows", array($this, 'query_pushing_database_rows'), 10 );
 
         /*
          * Backup: Exclude file extension from backup
          */
-        // add_filter( 'wpstg.export.files.ignore.file_extension', 'wpstg_export_files_ignore_extensions');
+        //add_filter( 'wpstg.export.files.ignore.file_extension', [$this, 'wpstg_export_files_ignore_extensions']);
 
         /*
          * Backup: Exclude files bigger than the given size from backup
          */
-        // add_filter( 'wpstg.export.files.ignore.file_bigger_than', 'wpstg_backup_files_ignore_files_bigger_than');
+        //add_filter( 'wpstg.export.files.ignore.file_bigger_than', [$this, 'wpstg_backup_files_ignore_files_bigger_than']);
 
         /*
          * Backup: Exclude files with particular extensions larger than the given file size from backup
          */
-        // add_filter( 'wpstg.export.files.ignore.file_extension_bigger_than', 'wpstg_backup_files_ignore_files_w_extension_bigger_than');
+        //add_filter( 'wpstg.export.files.ignore.file_extension_bigger_than', [$this, 'wpstg_backup_files_ignore_files_w_extension_bigger_than']);
     }
 
     /**
