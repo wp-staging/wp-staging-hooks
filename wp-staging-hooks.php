@@ -322,7 +322,7 @@ class wpstagingHooks
       
         $args['replace_with'][] = '%2F%2Fwww.example.com%2F';
         $args['replace_with'][] = '//www.example2.com/';
-        $args['search_for'][] = '\/\/www.example2.com';
+        $args['replace_with'][] = '\/\/www.example2.com';
 
         // Default values - Can be changed
         $args['replace_guids'] = 'off';
