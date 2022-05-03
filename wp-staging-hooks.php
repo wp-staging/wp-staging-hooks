@@ -5,12 +5,12 @@
   Plugin URI: https://wp-staging.com
   Description: Extend WP STAGING by using actions and filters.
   Author: WP STAGING
-  Version: 1.0.2
+  Version: 1.0.3
   Author URI: https://wp-staging.com
  */
 
 /*
- * Copyright (c) 2021 WP STAGING. All rights reserved.
+ * Copyright (c) 2023 WP STAGING. All rights reserved.
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -141,6 +141,13 @@ class wpstagingHooks
          * Backup: Exclude files with particular extensions larger than the given file size from backup
          */
         //add_filter( 'wpstg.export.files.ignore.file_extension_bigger_than', [$this, 'wpstg_backup_files_ignore_files_w_extension_bigger_than']);
+        
+        /*
+         * Backup: Exclude folders from being included in a backup
+         */
+        //add_filter( 'wpstg.backup.exclude.directories', [$this, 'wpstg_backup_exclude_directories']);
+    
+      
     }
 
     /**
@@ -469,6 +476,16 @@ class wpstagingHooks
             'tar' => 20 * MB_IN_BYTES
         ];
         return array_merge($default, $ignoreFiles);
+    }
+  
+      /**
+     * Backup: Exclude folders from being included in a backup
+     */
+    function wpstg_backup_exclude_directories($excludedDirectories){
+        $customExcludedDirectories = [
+            'var/www/example.com/htdocs/wp-content/cache'
+        ];
+        return array_merge($excludedDirectories, $customExcludedDirectories);
     }
 }
 
