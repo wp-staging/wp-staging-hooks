@@ -146,8 +146,11 @@ class wpstagingHooks
          * Backup: Exclude folders from being included in a backup
          */
         //add_filter( 'wpstg.backup.exclude.directories', [$this, 'wpstg_backup_exclude_directories']);
-    
       
+        /*
+         * Backup: Exclude files from being restored
+         */
+        //add_filter( 'wpstg.backup.restore.exclude.files', [$this, 'wpstg_backup_restore_exclude_files']);
     }
 
     /**
@@ -478,7 +481,7 @@ class wpstagingHooks
         return array_merge($default, $ignoreFiles);
     }
   
-      /**
+    /**
      * Backup: Exclude folders from being included in a backup
      */
     function wpstg_backup_exclude_directories($excludedDirectories){
@@ -486,6 +489,17 @@ class wpstagingHooks
             'var/www/example.com/htdocs/wp-content/cache'
         ];
         return array_merge($excludedDirectories, $customExcludedDirectories);
+    }
+  
+    /**
+     * Backup: Exclude files from being restored
+     */
+    function wpstg_backup_restore_exclude_files($excludedFiles){
+        $customExcludedFiles = [
+            'wp-content/db.php',
+            'wp-content/object-cache.php',
+        ];
+        return array_merge($excludedFiles, $customExcludedFiles);
     }
 }
 
