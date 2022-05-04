@@ -5,7 +5,7 @@
   Plugin URI: https://wp-staging.com
   Description: Extend WP STAGING by using actions and filters.
   Author: WP STAGING
-  Version: 1.0.3
+  Version: 1.0.4
   Author URI: https://wp-staging.com
  */
 
@@ -150,7 +150,7 @@ class wpstagingHooks
         /*
          * Backup: Exclude files from being restored
          */
-        //add_filter( 'wpstg.backup.restore.exclude.files', [$this, 'wpstg_backup_restore_exclude_files']);
+        //add_filter( 'wpstg.backup.restore.exclude.other.files', [$this, 'wpstg_backup_restore_exclude_other_files']);
     }
 
     /**
@@ -494,7 +494,7 @@ class wpstagingHooks
     /**
      * Backup: Exclude files from being restored
      */
-    function wpstg_backup_restore_exclude_files($excludedFiles){
+    function wpstg_backup_restore_exclude_other_files($excludedFiles){
         $customExcludedFiles = [
             'wp-content/db.php',
             'wp-content/object-cache.php',
