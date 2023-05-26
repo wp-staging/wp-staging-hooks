@@ -289,7 +289,7 @@ class wpstagingHooks
     public function excludeFolders($defaultFolders)
     {
         $folders = [
-            '/wp-content/plugin/wordpress-seo', // Relative path to your wordpress root path. Remember to add leading slash
+            '/wp-content/plugins/wordpress-seo', // Relative path to your wordpress root path. Remember to add leading slash
             '**/node_modules', // Wildcard path
             '*.zip' // Extension
         ];
@@ -303,7 +303,7 @@ class wpstagingHooks
     public function multisiteExcludePathsCloning($defaultFolders)
     {
         $folders = [
-            '/wp-content/plugin/wordpress-seo', // Relative path to your wordpress root path, remember to add leading slash 
+            '/wp-content/plugins/wordpress-seo', // Relative path to your wordpress root path, remember to add leading slash 
             '**/node_modules', // Wildcard path
             '*.zip' // Extension
         ];
