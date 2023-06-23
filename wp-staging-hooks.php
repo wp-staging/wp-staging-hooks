@@ -490,7 +490,7 @@ class wpstagingHooks
   
     /**
      * Backup: Exclude folders from being included in a backup
-     * E.g. This examples excludes the folder wp-content/cache
+     * E.g. This examples excludes the folder WP_CONTENT_DIR  . '/cache'
      */
     function wpstg_backup_exclude_directories($excludedDirectories){
         $customExcludedDirectories = [
