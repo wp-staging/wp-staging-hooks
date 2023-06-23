@@ -17,6 +17,13 @@
  * 
  * Released under the GPL license
  * http://www.opensource.org/licenses/gpl-license.php
+ *
+ */
+
+/*
+ * Note: This plugin does not contain all available hooks. 
+ * Always check the official docs before using one of these hooks: 
+ * https://wp-staging.com/docs/actions-and-filters/
  */
 
 class wpstagingHooks
@@ -483,6 +490,7 @@ class wpstagingHooks
   
     /**
      * Backup: Exclude folders from being included in a backup
+     * E.g. This examples excludes the folder wp-content/cache
      */
     function wpstg_backup_exclude_directories($excludedDirectories){
         $customExcludedDirectories = [
